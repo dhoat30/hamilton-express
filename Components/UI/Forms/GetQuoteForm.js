@@ -15,6 +15,7 @@ import GoogleAutocomplete from "@/Components/GoogleMaps/GoogleAutoComplete";
 import styles from "./FormStyle.module.scss";
 import dayjs from "dayjs";
 import { useClickIds } from "@/hooks/useClickIds";
+import { sendFormSubmissionToGoogleTagManager } from "@/utils/googleTagManager";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 
 export default function GetQuoteForm({
@@ -104,6 +105,10 @@ export default function GetQuoteForm({
     const lastName = parts.slice(1).join(" ") || ""; // everything after firstName
 
     let formattedDate = dayjs(formData.datePicker).valueOf();
+    const transactionId =
+      typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `lead-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
     const dataPayload = {
       email: formData.email,
@@ -172,6 +177,19 @@ export default function GetQuoteForm({
       headers: { "Content-Type": "application/json" },
       data: dataPayload,
     };
+    var configGoogleAdsConversion = {
+      method: "post",
+      url: "/api/google-ads-conversion",
+      headers: { "Content-Type": "application/json" },
+      data: {
+        clickIds,
+        email: formData.email,
+        phone: formData.phone,
+        transactionId,
+        conversionValue: 0,
+        currencyCode: "NZD",
+      },
+    };
 
     // const facebookData = {
     //     method: 'post',
@@ -191,7 +209,10 @@ export default function GetQuoteForm({
     //     }
     // }
 
-    Promise.all([axios(configHubspot), axios(configSendMail)])
+    Promise.all([
+      axios(configHubspot),
+      axios(configSendMail),
+    ])
       .then(function (response) {
         console.log(response);
         if (response[0].status === 200) {
@@ -199,27 +220,28 @@ export default function GetQuoteForm({
           setIsSuccess(true);
           setNewSubmission(false);
           setError(false);
-          if (typeof window !== "undefined" && window.dataLayer) {
-            window.dataLayer.push({
-              event: "quote_form_submission",
-              formName: "Moving Quote",
-              formData: {
-                firstName: firstName,
-                email: formData.email,
-                phone: formData.phone,
-                street: `${googleAdsAddress.pickUpAddress.streetNumber} ${googleAdsAddress.pickUpAddress.streetName}`,
-                city: googleAdsAddress.pickUpAddress.city,
-                region: googleAdsAddress.pickUpAddress.region,
-                postCode: googleAdsAddress.pickUpAddress.postalCode,
-                gclid: clickIds.gclid,
-                gbraid: clickIds.gbraid,
-                wbraid: clickIds.wbraid,
-                fbclid: clickIds.fbclid,
-                fbc: clickIds.fbc,
-                fbp: clickIds.fbp,
-              },
-            });
-          }
+          axios(configGoogleAdsConversion).catch((error) => {
+            console.warn("Google Ads conversion upload skipped/failed", error);
+          });
+          sendFormSubmissionToGoogleTagManager({
+            eventName: "quote_form_submission",
+            formName: "Moving Quote",
+            transactionId,
+            conversionValue: 0,
+            currency: "NZD",
+            clickIds,
+            formData: {
+              firstName: firstName,
+              email: formData.email,
+              phone: formData.phone,
+              street: `${googleAdsAddress.pickUpAddress.streetNumber || ""} ${
+                googleAdsAddress.pickUpAddress.streetName || ""
+              }`.trim(),
+              city: googleAdsAddress.pickUpAddress.city,
+              region: googleAdsAddress.pickUpAddress.region,
+              postCode: googleAdsAddress.pickUpAddress.postalCode,
+            },
+          });
           router.push("/form-submitted/thank-you");
         } else {
           setIsLoading(false);

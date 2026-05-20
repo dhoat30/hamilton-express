@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 import Typography from "@mui/material/Typography";
 import GoogleAutocomplete from "@/Components/GoogleMaps/GoogleAutoComplete";
 import styles from "./FormStyle.module.scss";
+import { useClickIds } from "@/hooks/useClickIds";
+import { sendFormSubmissionToGoogleTagManager } from "@/utils/googleTagManager";
 export default function ContactForm({
   className,
   formName = "Get a Quote Form",
@@ -19,6 +21,7 @@ export default function ContactForm({
   hideTitle = false,
 }) {
   const router = useRouter();
+  const { clickIds } = useClickIds();
 
   const [formData, setFormData] = useState({
     firstname: "", // Default empty string to make it controlled
@@ -105,6 +108,10 @@ export default function ContactForm({
         { name: "message", value: formData.message },
       ],
     };
+    const transactionId =
+      typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `lead-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
     setIsLoading(true);
   
@@ -121,6 +128,19 @@ export default function ContactForm({
       url: "/api/sendmail",
       headers: { "Content-Type": "application/json" },
       data: dataPayload,
+    };
+    var configGoogleAdsConversion = {
+      method: "post",
+      url: "/api/google-ads-conversion",
+      headers: { "Content-Type": "application/json" },
+      data: {
+        clickIds,
+        email: formData.email,
+        phone: formData.phone,
+        transactionId,
+        conversionValue: 0,
+        currencyCode: "NZD",
+      },
     };
 
     // const facebookData = {
@@ -141,13 +161,33 @@ export default function ContactForm({
     //     }
     // }
 
-    Promise.all([axios(configHubspot), axios(configSendMail)])
+    Promise.all([
+      axios(configHubspot),
+      axios(configSendMail),
+    ])
       .then(function (response) {
         if (response[0].status === 200) {
           setIsLoading(false);
           setIsSuccess(true);
           setNewSubmission(false);
           setError(false);
+          axios(configGoogleAdsConversion).catch((error) => {
+            console.warn("Google Ads conversion upload skipped/failed", error);
+          });
+          sendFormSubmissionToGoogleTagManager({
+            eventName: "contact_form_submission",
+            formName,
+            transactionId,
+            conversionValue: 0,
+            currency: "NZD",
+            clickIds,
+            formData: {
+              firstName: formData.firstname,
+              email: formData.email,
+              phone: formData.phone,
+              address: formData.address,
+            },
+          });
           router.push("/form-submitted/thank-you");
         } else {
           setIsLoading(false);
