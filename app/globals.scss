@@ -312,17 +312,35 @@ ul {
   }
 
 }
+
+.heading-2,
+.heading-2 h2,
+.heading-2 p {
+  font-family: var(--font-work-sans), sans-serif;
+    font-weight: 700 !important;
+     color: var(--light-primary) !important;
+  font-size: 1.4rem;
+  line-height: 150%;
+  
+  strong {
+    font-weight: 700;
+        color: var(--light-primary) !important;
+
+  }
+
+}
 .heading-4,
 .heading-4 p {
   font-family: var(--font-work-sans), sans-serif;
-  font-weight: 500;
-  color: var(--light-on-surface-variant);
+    font-weight: 500 !important;
+     color: var(--light-on-surface-variant) !important;
   font-size: 1.4rem;
   line-height: 150%;
 
   strong {
-    font-weight: 600;
-    color: var(--light-on-surface);
+    font-weight: 600  ;
+        color: var(--light-on-surface) !important;
+
   }
 
 }

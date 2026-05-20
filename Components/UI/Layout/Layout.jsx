@@ -222,6 +222,7 @@ if (section.acf_fc_layout === "landing_page_hero_section") {
       return <Stats key={index} statsData={statsData} />;
     }
     if (section.acf_fc_layout === "show_locations" && section.show_locations) {
+      if (!locationsCovered) return null;
       return (
         <LocationsCovered
           key={index}
@@ -229,6 +230,17 @@ if (section.acf_fc_layout === "landing_page_hero_section") {
           description={locationsCovered.description}
           locations={locationsCovered.locations}
           image={locationsCovered.image}
+        />
+      );
+    }
+    if (section.acf_fc_layout === "locations_covered") {
+      return (
+        <LocationsCovered
+          key={index}
+          title={section.title}
+          description={section.description}
+          locations={section.locations}
+          image={section.image}
         />
       );
     }
