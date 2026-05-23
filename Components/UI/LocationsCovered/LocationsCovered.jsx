@@ -165,7 +165,7 @@ export default function LocationsCovered({
   };
 
   return (
-    <section className={`${styles.section}`}>
+    <section className={`${styles.section}`} id="locations-covered">
       <Container maxWidth="lg" className={styles.container}>
         <div className={`${styles.contentWrapper}`}>
           {hasHtmlTitle ? (
