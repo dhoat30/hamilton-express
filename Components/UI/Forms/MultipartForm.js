@@ -46,6 +46,7 @@ export default function MultipartForm({
   hideTitle = false,
 }) {
   const router = useRouter();
+  const phoneNumber = process.env.NEXT_PUBLIC_PHONE_NUMBER;
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     firstname: "", // Default empty string to make it controlled
@@ -539,33 +540,31 @@ export default function MultipartForm({
                 </Button>
               )}
             </div>
-              {currentStep === STEPS.length && (
-                <>
-                         <Button
-                variant="text"
-                className="mt-8  align-center"
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-                href={`tel:${process.env.NEXT_PUBLIC_PHONE_NUMBER}`}
-                startIcon={<LocalPhoneIcon />}
-              >
-                Prefer to talk? {process.env.NEXT_PUBLIC_PHONE_NUMBER}
-              </Button>
+            {phoneNumber && (
+              <>
+                <Button
+                  variant="text"
+                  className="mt-8  align-center"
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                  href={`tel:${phoneNumber}`}
+                  startIcon={<LocalPhoneIcon />}
+                >
+                  Prefer to talk? {phoneNumber}
+                </Button>
                 <Typography
-                variant="body1"
-                component="div"
-                className="center-align mt-8"
-                color="secondary"
-               
-              >
-                Honest advice • Free Quote • No obligation
-              </Typography>
-                </>
-           
-              ) }
+                  variant="body1"
+                  component="div"
+                  className="center-align mt-8"
+                  color="secondary"
+                >
+                  Honest advice • Free Quote • No obligation
+                </Typography>
+              </>
+            )}
           
            
             
