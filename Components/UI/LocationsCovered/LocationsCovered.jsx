@@ -36,6 +36,30 @@ const LOCATION_COORDINATES = {
   Ohaupo: [-37.9189, 175.3066],
 };
 
+const FALLBACK_TITLE = "<h2>Moving Services Across Hamilton & Waikato</h2>";
+const FALLBACK_DESCRIPTION =
+  "Hamilton Express Movers helps with house moves, apartment moves, office relocations, and furniture deliveries across Hamilton and nearby Waikato towns.";
+const FALLBACK_LOCATIONS = [
+  "Hamilton Central",
+  "Hamilton East",
+  "Frankton",
+  "Hillcrest",
+  "Chartwell",
+  "Flagstaff",
+  "Rototuna",
+  "Te Rapa",
+  "Dinsdale",
+  "Glenview",
+  "Melville",
+  "Nawton",
+  "Cambridge",
+  "Te Awamutu",
+  "Morrinsville",
+  "Ngaruawahia",
+  "Huntly",
+  "Matamata",
+];
+
 function getLocationLabel(location) {
   if (typeof location === "string") return location;
   return location?.label || location?.location || location?.title || "";
@@ -57,7 +81,7 @@ export default function LocationsCovered({
   const [mapError, setMapError] = useState("");
 
   const locationLabels = useMemo(() => {
-    const labels = (locations || [])
+    const labels = ((locations && locations.length ? locations : FALLBACK_LOCATIONS) || [])
       .map(getLocationLabel)
       .map((label) => label.trim())
       .filter(Boolean);
@@ -65,10 +89,14 @@ export default function LocationsCovered({
     return [...new Set(labels)];
   }, [locations]);
 
-  const titleText = stripHtml(title);
-  const hasHtmlTitle = typeof title === "string" && /<\/?[a-z][\s\S]*>/i.test(title);
+  const resolvedTitle = title || FALLBACK_TITLE;
+  const resolvedDescription = description || FALLBACK_DESCRIPTION;
+  const titleText = stripHtml(resolvedTitle);
+  const hasHtmlTitle =
+    typeof resolvedTitle === "string" && /<\/?[a-z][\s\S]*>/i.test(resolvedTitle);
   const hasHtmlDescription =
-    typeof description === "string" && /<\/?[a-z][\s\S]*>/i.test(description);
+    typeof resolvedDescription === "string" &&
+    /<\/?[a-z][\s\S]*>/i.test(resolvedDescription);
 
   useEffect(() => {
     let cancelled = false;
@@ -171,18 +199,18 @@ export default function LocationsCovered({
           {hasHtmlTitle ? (
             <div
               className={`${styles.title} heading-2 `}
-              dangerouslySetInnerHTML={{ __html: title }}
+              dangerouslySetInnerHTML={{ __html: resolvedTitle }}
             />
           ) : (
             <Typography variant="h3" component="h2" className={styles.title}>
-              {title}
+              {resolvedTitle}
             </Typography>
           )}
 
           {hasHtmlDescription ? (
             <div
               className={`body1 mt-16`}
-              dangerouslySetInnerHTML={{ __html: description }}
+              dangerouslySetInnerHTML={{ __html: resolvedDescription }}
             />
           ) : (
             <Typography
@@ -190,7 +218,7 @@ export default function LocationsCovered({
               component="p"
               className={`${styles.description} mt-16`}
             >
-              {description}
+              {resolvedDescription}
             </Typography>
           )}
 

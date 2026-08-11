@@ -69,7 +69,7 @@ export default function FooterCta({ title, description, ctaArray }) {
               })
                 : (
                   <>
-                    <Link href="/#get-quote-form" className={`${styles.quoteButton}`}>
+                    <Link href="/get-free-moving-quote" className={`${styles.quoteButton}`}>
 
                       <Button
                         size="large"

@@ -916,12 +916,17 @@ strong {
 
 
 // desktop navbar 
-.desktop-navbar {
+.desktop-navbar,
+.unified-navbar {
   z-index: 10000;
   top: 0;
   position: fixed;
   box-shadow: none;
-padding: 8px 0; 
+  padding: 0;
+
+  @media (min-width: 1200px) {
+    padding: 8px 0;
+  }
   .grid-links-wrapper {
     display: flex;
     justify-content: space-between;
@@ -1020,16 +1025,29 @@ padding: 8px 0;
   }
 }
 
+.header-offset {
+  height: 98px;
+
+  @media (min-width: 1200px) {
+    height: 116px;
+  }
+}
+
 // mobile navbar 
 
-.appbar {
+.appbar,
+.unified-navbar {
   backdrop-filter: blur(7.6px);
   .menu-logo-wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
   }
 
+  .hamburger-icon {
+    margin-right: 0 !important;
+  }
 
 
 }
