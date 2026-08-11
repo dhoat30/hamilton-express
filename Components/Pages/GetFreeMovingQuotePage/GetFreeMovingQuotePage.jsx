@@ -7,7 +7,7 @@ import MovingQuoteLeadForm from "@/Components/UI/Forms/MovingQuoteLeadForm";
 import styles from "./GetFreeMovingQuotePage.module.scss";
 
 const featureItems = [
-  "2 Men + Truck | $45/hr",
+  "2 Men + Truck | $65/hr",
   "No depot fee, pay on arrival",
   "Packing & unpacking available",
   "We can beat any quote by 10%",
