@@ -4,6 +4,8 @@ import GetFreeMovingQuotePage from "@/Components/Pages/GetFreeMovingQuotePage/Ge
 import styles from "@/Components/Pages/GetFreeMovingQuotePage/GetFreeMovingQuotePage.module.scss";
 import LocationsCovered from "@/Components/UI/LocationsCovered/LocationsCovered";
 
+import Gallery from "@/Components/UI/Gallery/Gallery";
+
 export const metadata = {
   title: "Get Free Moving Quote | Hamilton Express Movers",
   description:
@@ -16,7 +18,8 @@ export default function Page() {
       <Header />
       <main>
         <GetFreeMovingQuotePage />
-        <LocationsCovered/> 
+        <LocationsCovered />
+        <Gallery />
       </main>
       <Footer
         showFooterCta={false}

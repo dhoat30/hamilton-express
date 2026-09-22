@@ -9,7 +9,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 const DEFAULT_CENTER = [-37.787, 175.2793];
 const DEFAULT_ZOOM = 10;
 const MAP_TILE_URL =
-  "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
+  "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 
 const LOCATION_COORDINATES = {
   "Hamilton Central": [-37.787, 175.2793],
@@ -117,7 +117,7 @@ export default function LocationsCovered({
         leaflet
           .tileLayer(MAP_TILE_URL, {
             attribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             maxZoom: 19,
           })
           .addTo(map);

@@ -4,7 +4,7 @@ import Header from '@/Components/UI/Header/Header'
 import {getSinglePostData} from '@/utils/fetchData'
 import Footer from '@/Components/UI/Footer/Footer'
 import Layout from '@/Components/UI/Layout/Layout'
-import GoogleReviewsCarousel from '@/Components/UI/GoogleReviews/GoogleReviewsCarousel'
+import Gallery from '@/Components/UI/Gallery/Gallery'
 import reviewsData from "@/data/google-reviews.json";
 
 
@@ -63,6 +63,7 @@ export async function generateMetadata(props, parent) {
                 {/* <USP showTitle={true} statsArray={options.stats.items} cards={options.usp.items} title={options.usp.section_title} description={options.usp.section_description} /> */}
             
 
+                <Gallery />
             </main>
             <Footer showFooterCta={true} footerCtaData={{title: "Book Your Move with Confidence", description: "Don’t risk delays, damage, or surprise costs on moving day. Choose a professional moving team that shows up on time and does the job right.", cta_link: {url: "/", title: "GET A QUOTE"}}  }/>
         </>
