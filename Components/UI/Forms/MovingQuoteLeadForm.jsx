@@ -55,7 +55,7 @@ const FORM_FIELDS = [
     id: "phone",
     label: "Phone number",
     type: "tel",
-    required: false,
+    required: true,
     autoComplete: "tel",
     errorMessage: "Please enter a valid New Zealand phone number",
     validation: (value) => {
